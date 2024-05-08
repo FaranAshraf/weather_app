@@ -15,6 +15,8 @@ class _HomeScreenState extends State<HomeScreen> {
   TextEditingController citynamecontroller = TextEditingController();
   String cityname = '';
   bool isPressed = false;
+  String date = '';
+  // Future snapshot
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,8 +31,18 @@ class _HomeScreenState extends State<HomeScreen> {
                   maxLength: 30,
                   spellCheckConfiguration: const SpellCheckConfiguration(),
                   controller: citynamecontroller,
-                  decoration: const InputDecoration(
-                      labelText: 'Enter city name', icon: Icon(Icons.search)),
+                  decoration: InputDecoration(
+                      labelText: 'Enter city name',
+                      icon: GestureDetector(
+                        child: const Icon(Icons.search),
+                        onTap: () {
+                          setState(() {
+                            cityname = citynamecontroller.text;
+                            isPressed = true;
+                            citynamecontroller.clear();
+                          });
+                        },
+                      )),
                   textInputAction: TextInputAction.search,
                   onSubmitted: (value) {
                     setState(() {
@@ -44,7 +56,9 @@ class _HomeScreenState extends State<HomeScreen> {
               CurrentWeatherWidget(
                 cityname: isPressed ? cityname : 'karachi',
               ),
-              FutureWeatherBoxes(cityname: isPressed ? cityname : 'karachi'),
+              FutureWeatherBoxes(
+                cityname: isPressed ? cityname : 'karachi',
+              ),
             ],
           ),
         ),
