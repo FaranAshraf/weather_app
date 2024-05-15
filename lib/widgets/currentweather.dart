@@ -36,8 +36,10 @@ class _CurrentWeatherWidgetState extends State<CurrentWeatherWidget> {
                 children: [
                   ListTile(
                     title: Text(
-                        style:
-                            const TextStyle(fontSize: 41, color: Colors.white),
+                        style: const TextStyle(
+                            fontSize: 41,
+                            color: Colors.white,
+                            fontFamily: 'Jaro'),
                         '${snapshot.data!.temp}⁰C'),
                     subtitle: Text(
                         style: const TextStyle(color: Colors.white),

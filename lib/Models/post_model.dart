@@ -16,7 +16,7 @@ class PostModel {
       required this.speed,
       required this.condition});
   PostModel.fromJson(Map<String, dynamic> json) {
-    date = json['location']['localtime'];
+    date = json['location']["localtime"];
     city = json['location']['name'];
     country = json['location']['country'];
     temp = json['current']['temp_c'];

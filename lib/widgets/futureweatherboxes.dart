@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:weather_app/functions/getAPIfutureresponse.dart';
+
+import 'package:weather_app/functions/getAPIresponse.dart';
 import 'package:weather_app/utils/appcolors.dart';
 
 class FutureWeatherBoxes extends StatefulWidget {
   final String cityname;
+  final String date;
 
-  const FutureWeatherBoxes({
-    super.key,
-    required this.cityname,
-  });
+  const FutureWeatherBoxes(
+      {super.key, required this.cityname, required this.date});
 
   @override
   State<FutureWeatherBoxes> createState() => _FutureWeatherBoxesState();
@@ -18,9 +18,8 @@ class _FutureWeatherBoxesState extends State<FutureWeatherBoxes> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: getfutureAPIresponse(
-          cityname: widget.cityname,
-        ),
+        future:
+            getfutureAPIresponse(cityname: widget.cityname, date: widget.date),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const CircularProgressIndicator(); // Display loading indicator
@@ -35,7 +34,10 @@ class _FutureWeatherBoxesState extends State<FutureWeatherBoxes> {
                   children: [
                     Text(
                       "Today's Hourly Update of ${widget.cityname.toUpperCase()}",
-                      style: const TextStyle(fontSize: 20, color: Colors.white),
+                      style: const TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                          fontFamily: 'Jaro'),
                     ),
                     SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
@@ -55,8 +57,10 @@ class _FutureWeatherBoxesState extends State<FutureWeatherBoxes> {
                               child: Column(
                                 children: [
                                   Text(
-                                    '0$i:00',
-                                    style: const TextStyle(color: Colors.white),
+                                    i < 10 ? '0$i:00' : '$i:00',
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontFamily: 'Jaro'),
                                   ),
                                   Text(
                                     '${snapshot.data!.hour![i]['temp_c']}⁰C',
