@@ -6,6 +6,7 @@ class PostModel {
   String? icon;
   double? speed;
   String? condition;
+  String? timeZone;
 
   PostModel(
       {required this.date,
@@ -14,7 +15,8 @@ class PostModel {
       required this.temp,
       required this.icon,
       required this.speed,
-      required this.condition});
+      required this.condition,
+      required this.timeZone});
   PostModel.fromJson(Map<String, dynamic> json) {
     date = json['location']["localtime"];
     city = json['location']['name'];
@@ -23,5 +25,6 @@ class PostModel {
     icon = json['current']['condition']['icon'];
     speed = json['current']['wind_mph'];
     condition = json['current']['condition']['text'];
+    timeZone = json['location']['tz_id'];
   }
 }

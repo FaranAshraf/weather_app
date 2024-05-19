@@ -20,62 +20,114 @@ class _CurrentWeatherWidgetState extends State<CurrentWeatherWidget> {
         future: getAPIresponse(cityname: widget.cityname),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator(); // Display loading indicator
+            return const Center(
+                child:
+                    CircularProgressIndicator()); // Display loading indicator
           } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}'); // Display error if any
+            return const Center(
+              child: Text(
+                'Invalid Entry!',
+                style: TextStyle(
+                    fontSize: 41, color: Colors.white, fontFamily: 'Jaro'),
+              ),
+            );
           } else {
-            // String? date = snapshot.data!.date;
             return Container(
-              height: 200,
+              height: 250,
               decoration: BoxDecoration(
                   gradient: MyAppColors.cardTileColor,
                   borderRadius: BorderRadius.circular(15)),
-              margin: const EdgeInsets.only(top: 100, right: 8, left: 8),
+              margin: const EdgeInsets.only(top: 70, right: 8, left: 8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ListTile(
-                    title: Text(
-                        style: const TextStyle(
-                            fontSize: 41,
-                            color: Colors.white,
-                            fontFamily: 'Jaro'),
-                        '${snapshot.data!.temp}⁰C'),
-                    subtitle: Text(
-                        style: const TextStyle(color: Colors.white),
-                        '${snapshot.data!.city}, ${snapshot.data!.country}'),
-                    trailing: Container(
-                      height: 100,
-                      width: 100,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                            fit: BoxFit.fill,
-                            image:
-                                NetworkImage('https:${snapshot.data!.icon}')),
+                  Row(
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.only(left: 8),
+                        child: Text(
+                            style: TextStyle(
+                                fontSize: 41,
+                                color: Colors.white,
+                                fontFamily: 'Jaro'),
+                            'NOW'),
                       ),
-                    ),
+                      const Spacer(),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: StreamBuilder(
+                          stream:
+                              getTimeZones(timeZone: snapshot.data!.timeZone!),
+                          builder: (context, snapshot2) {
+                            if (snapshot2.connectionState ==
+                                ConnectionState.waiting) {
+                              return const CircularProgressIndicator();
+                            }
+                            return Text(
+                              snapshot2.data!.time!,
+                              style: const TextStyle(
+                                  fontSize: 41,
+                                  color: Colors.white,
+                                  fontFamily: 'Jaro'),
+                            );
+                          },
+                        ),
+                      )
+                    ],
                   ),
+                  Row(
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8),
+                            child: Text(
+                                style: const TextStyle(
+                                    fontSize: 41,
+                                    color: Colors.white,
+                                    fontFamily: 'Jaro'),
+                                '${snapshot.data!.temp}⁰C'),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8),
+                            child: Text(
+                                style: const TextStyle(color: Colors.white),
+                                '${snapshot.data!.city}, ${snapshot.data!.country}'),
+                          ),
+                        ],
+                      ),
+                      const Spacer(),
+                      Container(
+                        margin: const EdgeInsets.only(right: 8),
+                        height: 100,
+                        width: 100,
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                              fit: BoxFit.fill,
+                              image:
+                                  NetworkImage('https:${snapshot.data!.icon}')),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Spacer(),
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
                       children: [
-                        Container(
-                          margin: const EdgeInsets.only(
-                            left: 15, top: 42,
-                            //right: 15
-                          ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8, bottom: 10),
                           child: Text(
                             'Wind Speed ${snapshot.data!.speed}mph',
                             style: const TextStyle(color: Colors.grey),
                           ),
                         ),
-                        //const Spacer(),
-                        Container(
-                          margin: const EdgeInsets.only(left: 20, right: 30),
+                        const SizedBox(
+                          width: 130,
                         ),
-                        Container(
-                          margin: const EdgeInsets.only(
-                              left: 50, top: 44, right: 20),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8, bottom: 10),
                           child: Text(
                             snapshot.data!.condition!,
                             style: const TextStyle(color: Colors.grey),

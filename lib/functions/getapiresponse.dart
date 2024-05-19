@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as https;
 import 'dart:convert';
 
 import 'package:weather_app/Models/post_model.dart';
 import 'package:weather_app/Models/post_future_weather_model.dart';
+import 'package:weather_app/Models/post_time_model.dart';
 
 Future<PostModel> getAPIresponse({required String cityname}) async {
   // TextEditingController citynamecontroller = TextEditingController();
@@ -26,18 +26,21 @@ Future<PostFutureModel> getfutureAPIresponse(
   return PostFutureModel.fromJson(futureresponseBody);
 }
 
-void fetchData() async {
-  String cityName = 'YourCityName';
+Stream<PostTimeModel> getTimeZones(
+    {required String timeZone,
+    Duration interval = const Duration(seconds: 1)}) async* {
+  var url = Uri.parse("http://worldtimeapi.org/api/timezone/$timeZone");
+  while (true) {
+    var response = await https.get(url);
 
-  // Fetch current weather data
-  PostModel currentWeather = await getAPIresponse(cityname: cityName);
+    if (response.statusCode == 200) {
+      var responseBody = jsonDecode(response.body);
+      yield PostTimeModel.fromJson(responseBody);
+    } else {
+      throw Exception('Failed to load time zone data');
+    }
 
-  // Extract date from current weather data
-  String? currentDate = currentWeather.date;
-
-  // Fetch future weather data using the obtained date
-  PostFutureModel futureWeather = await getfutureAPIresponse(
-    cityname: cityName,
-    date: currentDate,
-  );
+    await Future.delayed(
+        interval); // Wait for the specified interval before the next request
+  }
 }
